@@ -1,4 +1,13 @@
 {
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": {"when": "$(basename).py"},
+        "**/__pycache__": true
+    },
     "python.pythonPath": "env\\Scripts\\python.exe",
     "python.testing.pytestArgs": [
         "swagger_server"
@@ -6,5 +15,4 @@
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
     "python.testing.pytestEnabled": true
-
 }
