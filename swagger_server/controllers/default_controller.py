@@ -19,8 +19,16 @@ def add_student(body, subject=None):  # noqa: E501
     :rtype: int
     """
     if connexion.request.is_json:
-        student = Student.from_dict(connexion.request.get_json())  # noqa: E501
         
+        student_json = connexion.request.get_json()
+        if 'first_name' not in student_json.keys() or student_json['first_name'] == '':
+            return 'invalid input', 405
+
+        if 'last_name' not in student_json.keys() or student_json['last_name'] == '':
+            return 'invalid input', 405
+        
+        student = Student.from_dict(student_json)  # noqa: E501
+
         try:
             return swagger_server.service.student_service.add_student(student)
         except ValueError:
