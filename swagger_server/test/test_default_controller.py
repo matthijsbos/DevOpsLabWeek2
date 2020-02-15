@@ -61,8 +61,6 @@ class TestDefaultController(BaseTestCase):
         self.assert_status(response, 409, 
                        'Response body is : ' + response.data.decode('utf-8'))
         
-        jsondata = json.loads(response.data)
-
     def test_delete_student(self):
         """Test case for delete_student
 
