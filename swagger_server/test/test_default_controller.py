@@ -41,6 +41,30 @@ class TestDefaultController(BaseTestCase):
         
         self.assertEqual(jsondata, 99)
 
+    @unittest.mock.patch('swagger_server.service.student_service.add_student')
+    def test_add_student_already_exists(self, mock_add_student):
+        """
+        return 409 if student already exists
+        """
+        body = Student()        
+
+        mock_add_student.return_value = ('already exists', 409)
+
+        query_string = [('subject', 'subject_example')]
+        response = self.client.open(
+            '/service-api/student',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json',
+            query_string=query_string)
+        
+        self.assert_status(response, 409, 
+                       'Response body is : ' + response.data.decode('utf-8'))
+        
+        jsondata = json.loads(response.data)
+        
+        self.assertEqual(jsondata, 'already exists')
+
 
     def test_delete_student(self):
         """Test case for delete_student
