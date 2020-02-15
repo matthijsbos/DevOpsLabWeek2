@@ -65,3 +65,10 @@ def get_student_by_id(student_id):  # noqa: E501
         return swagger_server.service.student_service.get_student_by_id(student_id, '')
     except ValueError:
         return 'invalid id', 404
+
+def find_student(last_name):  # noqa: E501
+  
+    try:
+        return swagger_server.service.student_service.get_student_by_last_name(last_name)
+    except ValueError:
+        return 'invalid last name', 404

@@ -159,6 +159,30 @@ class TestDefaultController(BaseTestCase):
         self.assertEqual(json_data['first_name'], "first1")
         self.assertEqual(json_data['last_name'], "last1")
 
+
+    @unittest.mock.patch('swagger_server.service.student_service.get_student_by_last_name')
+    def test_get_student_by_last_name(self, mock_get_student_by_last_name):
+        """
+        find student by last name
+        """
+
+        mock_get_student_by_last_name.return_value = Student(1, "first1", "last1")
+
+        response = self.client.open(
+            '/service-api/student/?last_name={last_name}'.format(last_name='last1'),
+            method='GET')
+
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        json_data = json.loads(response.data)
+        print(json_data)
+
+        self.assertEqual(json_data['student_id'], 1)
+        self.assertEqual(json_data['first_name'], "first1")
+        self.assertEqual(json_data['last_name'], "last1")
+
+
     @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
     def test_get_student_by_id_invalid_id(self, mock_get_student_by_id):
         """

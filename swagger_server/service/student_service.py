@@ -46,6 +46,14 @@ def get_student_by_id(student_id, subject):
     else:
         raise ValueError
 
+def get_student_by_last_name(last_name):
+    
+    student = student_db.get(last_name=last_name)
+    
+    if not student:
+        raise ValueError
+
+    return Student.from_dict(student)
 
 
 def delete_student(student_id):

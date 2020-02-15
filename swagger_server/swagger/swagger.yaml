@@ -8,6 +8,28 @@ basePath: "/service-api"
 schemes:
 - "http"
 paths:
+  /student/:
+    get:
+      summary: find by last name
+      operationId: "find_student"
+      consumes:
+        - "application/json"
+        - "application/xml"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+      - name: "last_name"
+        in: "query"
+        description: "The last name"
+        required: false
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Student"
+      x-swagger-router-controller: "swagger_server.controllers.default_controller"
   /student:
     post:
       summary: "Add a new student"
