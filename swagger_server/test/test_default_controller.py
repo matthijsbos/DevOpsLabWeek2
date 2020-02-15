@@ -48,7 +48,7 @@ class TestDefaultController(BaseTestCase):
         """
         body = Student()        
 
-        mock_add_student.return_value = ('already exists', 409)
+        mock_add_student.side_effect = ValueError
 
         query_string = [('subject', 'subject_example')]
         response = self.client.open(
@@ -62,9 +62,6 @@ class TestDefaultController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         
         jsondata = json.loads(response.data)
-        
-        self.assertEqual(jsondata, 'already exists')
-
 
     def test_delete_student(self):
         """Test case for delete_student
