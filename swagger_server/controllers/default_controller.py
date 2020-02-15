@@ -53,4 +53,7 @@ def get_student_by_id(student_id):  # noqa: E501
 
     :rtype: Student
     """
-    return swagger_server.service.student_service.get_student_by_id(student_id, '')
+    try:
+        return swagger_server.service.student_service.get_student_by_id(student_id, '')
+    except ValueError:
+        return 'invalid id', 404

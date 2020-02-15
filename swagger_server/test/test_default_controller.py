@@ -120,6 +120,22 @@ class TestDefaultController(BaseTestCase):
         self.assertEqual(json_data['student_id'], 1)
         self.assertEqual(json_data['first_name'], "first1")
         self.assertEqual(json_data['last_name'], "last1")
+
+    @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
+    def test_get_student_by_id_invalid_id(self, mock_get_student_by_id):
+        """
+        Return 404 on invalid id
+        """
+
+        mock_get_student_by_id.side_effect = ValueError
+        
+        response = self.client.open(
+            '/service-api/student/{student_id}'.format(student_id=1),
+            method='GET')
+
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
         
 
 if __name__ == '__main__':
