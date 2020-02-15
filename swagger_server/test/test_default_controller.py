@@ -86,6 +86,22 @@ class TestDefaultController(BaseTestCase):
         self.assertEqual(response_student, mock_student)
 
 
+    @unittest.mock.patch('swagger_server.service.student_service.delete_student')
+    def test_delete_student_invalid_id(self, mock_delete_student):
+        """
+        test delete invalid student returns 404
+        """
+        
+        mock_delete_student.side_effect = ValueError
+        
+        response = self.client.open(
+            '/service-api/student/{student_id}'.format(student_id=789),
+            method='DELETE')
+        self.assert404(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+
+
     @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
     def test_get_student_by_id(self, mock_get_student_by_id):
         """Test case for get_student_by_id
