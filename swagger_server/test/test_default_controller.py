@@ -65,17 +65,26 @@ class TestDefaultController(BaseTestCase):
         
         self.assertEqual(jsondata, 'already exists')
 
-
-    def test_delete_student(self):
-        """Test case for delete_student
-
-        
+    @unittest.mock.patch('swagger_server.service.student_service.delete_student')
+    def test_delete_student(self, mock_delete_student):
         """
+        Test case for delete_student
+        """
+        
+        mock_student = Student(789, "first_name", "last_name", grades={})
+
+        mock_delete_student.return_value = mock_student
+        
         response = self.client.open(
             '/service-api/student/{student_id}'.format(student_id=789),
             method='DELETE')
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+
+        response_student = Student.from_dict(json.loads(response.data))
+
+        self.assertEqual(response_student, mock_student)
+
 
     @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
     def test_get_student_by_id(self, mock_get_student_by_id):
