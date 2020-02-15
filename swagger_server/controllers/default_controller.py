@@ -20,8 +20,8 @@ def add_student(body, subject=None):  # noqa: E501
     """
     if connexion.request.is_json:
         student = Student.from_dict(connexion.request.get_json())  # noqa: E501
-        swagger_server.service.student_service.add_student(student)
-
+        return swagger_server.service.student_service.add_student(student)
+        
 
     
     return 'do some magic!'
