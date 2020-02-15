@@ -43,7 +43,7 @@ def delete_student(student_id):  # noqa: E501
         return 'invalid id', 404
 
 
-def get_student_by_id(student_id):  # noqa: E501
+def get_student_by_id(student_id, subject=None):  # noqa: E501
     """Find student by ID
 
     Returns a single student # noqa: E501
@@ -54,6 +54,6 @@ def get_student_by_id(student_id):  # noqa: E501
     :rtype: Student
     """
     try:
-        return swagger_server.service.student_service.get_student_by_id(student_id, '')
+        return swagger_server.service.student_service.get_student_by_id(student_id, subject)
     except ValueError:
         return 'invalid id', 404
