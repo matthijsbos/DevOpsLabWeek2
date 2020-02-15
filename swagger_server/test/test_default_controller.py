@@ -14,12 +14,15 @@ from swagger_server.test import BaseTestCase
 class TestDefaultController(BaseTestCase):
     """DefaultController integration test stubs"""
 
-    def test_add_student(self):
+    @unittest.mock.patch('swagger_server.service.student_service.add_student')
+    def test_add_student(self, mock_add_student):
         """Test case for add_student
 
         Add a new student
         """
         body = Student()
+        
+        
         query_string = [('subject', 'subject_example')]
         response = self.client.open(
             '/service-api/student',
@@ -27,8 +30,13 @@ class TestDefaultController(BaseTestCase):
             data=json.dumps(body),
             content_type='application/json',
             query_string=query_string)
+        
+        mock_add_student.assert_called_with(body)
+
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
+
+        
 
     def test_delete_student(self):
         """Test case for delete_student
