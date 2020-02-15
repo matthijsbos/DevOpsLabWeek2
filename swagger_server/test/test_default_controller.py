@@ -48,7 +48,7 @@ class TestDefaultController(BaseTestCase):
         """
         body = Student()        
 
-        mock_add_student.return_value = ('already exists', 409)
+        mock_add_student.side_effect = ValueError
 
         query_string = [('subject', 'subject_example')]
         response = self.client.open(
@@ -62,15 +62,13 @@ class TestDefaultController(BaseTestCase):
                        'Response body is : ' + response.data.decode('utf-8'))
         
         jsondata = json.loads(response.data)
-        
-        self.assertEqual(jsondata, 'already exists')
 
     @unittest.mock.patch('swagger_server.service.student_service.delete_student')
     def test_delete_student(self, mock_delete_student):
         """
         Test case for delete_student
         """
-        
+
         mock_student = Student(789, "first_name", "last_name", grades={})
 
         mock_delete_student.return_value = mock_student

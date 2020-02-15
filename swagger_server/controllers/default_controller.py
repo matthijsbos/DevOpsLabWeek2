@@ -20,12 +20,11 @@ def add_student(body, subject=None):  # noqa: E501
     """
     if connexion.request.is_json:
         student = Student.from_dict(connexion.request.get_json())  # noqa: E501
-        return swagger_server.service.student_service.add_student(student)
         
-
-    
-    return 'do some magic!'
-
+        try:
+            return swagger_server.service.student_service.add_student(student)
+        except ValueError:
+            return 'already exists', 409
 
 def delete_student(student_id):  # noqa: E501
     """delete_student
