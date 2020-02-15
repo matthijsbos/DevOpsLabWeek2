@@ -20,7 +20,7 @@ class TestDefaultController(BaseTestCase):
 
         Add a new student
         """
-        body = Student()
+        body = Student(first_name="test", last_name="test")
         
         mock_add_student.return_value = 99
 
@@ -32,11 +32,12 @@ class TestDefaultController(BaseTestCase):
             content_type='application/json',
             query_string=query_string)
         
-        mock_add_student.assert_called_with(body)
 
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
-        
+
+        mock_add_student.assert_called_with(body)
+
         jsondata = json.loads(response.data)
         
         self.assertEqual(jsondata, 99)
@@ -46,7 +47,7 @@ class TestDefaultController(BaseTestCase):
         """
         return 409 if student already exists
         """
-        body = Student()        
+        body = Student(first_name="test", last_name="test")
 
         mock_add_student.side_effect = ValueError
 
@@ -60,7 +61,44 @@ class TestDefaultController(BaseTestCase):
         
         self.assert_status(response, 409, 
                        'Response body is : ' + response.data.decode('utf-8'))
+    
+
+    def test_add_invalid_student(self):
+        """
+        return 405 if student is missing first or last name
+        """
+        body = {
+            "first_name": "test"
+        }
+
+        query_string = [('subject', 'subject_example')]
+        response = self.client.open(
+            '/service-api/student',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json',
+            query_string=query_string)
         
+        self.assert_status(response, 405, 
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+
+        body = {
+            "last_name": "test"
+        }
+
+        query_string = [('subject', 'subject_example')]
+        response = self.client.open(
+            '/service-api/student',
+            method='POST',
+            data=json.dumps(body),
+            content_type='application/json',
+            query_string=query_string)
+        
+        self.assert_status(response, 405, 
+                       'Response body is : ' + response.data.decode('utf-8'))
+    
+    
     @unittest.mock.patch('swagger_server.service.student_service.delete_student')
     def test_delete_student(self, mock_delete_student):
         """
@@ -120,6 +158,30 @@ class TestDefaultController(BaseTestCase):
         self.assertEqual(json_data['student_id'], 1)
         self.assertEqual(json_data['first_name'], "first1")
         self.assertEqual(json_data['last_name'], "last1")
+
+
+    @unittest.mock.patch('swagger_server.service.student_service.get_student_by_last_name')
+    def test_get_student_by_last_name(self, mock_get_student_by_last_name):
+        """
+        find student by last name
+        """
+
+        mock_get_student_by_last_name.return_value = Student(1, "first1", "last1")
+
+        response = self.client.open(
+            '/service-api/student/?last_name={last_name}'.format(last_name='last1'),
+            method='GET')
+
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+        json_data = json.loads(response.data)
+        print(json_data)
+
+        self.assertEqual(json_data['student_id'], 1)
+        self.assertEqual(json_data['first_name'], "first1")
+        self.assertEqual(json_data['last_name'], "last1")
+
 
     @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
     def test_get_student_by_id_invalid_id(self, mock_get_student_by_id):
