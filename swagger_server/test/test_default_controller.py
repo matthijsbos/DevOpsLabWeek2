@@ -61,8 +61,6 @@ class TestDefaultController(BaseTestCase):
         self.assert_status(response, 409, 
                        'Response body is : ' + response.data.decode('utf-8'))
         
-        jsondata = json.loads(response.data)
-
     @unittest.mock.patch('swagger_server.service.student_service.delete_student')
     def test_delete_student(self, mock_delete_student):
         """
