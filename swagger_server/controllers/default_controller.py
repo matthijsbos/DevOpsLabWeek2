@@ -1,9 +1,10 @@
 import connexion
 import six
 
+import swagger_server.service.student_service
 from swagger_server.models.student import Student  # noqa: E501
 from swagger_server import util
-
+import flask
 
 def add_student(body, subject=None):  # noqa: E501
     """Add a new student
@@ -18,7 +19,8 @@ def add_student(body, subject=None):  # noqa: E501
     :rtype: int
     """
     if connexion.request.is_json:
-        body = Student.from_dict(connexion.request.get_json())  # noqa: E501
+        student = Student.from_dict(connexion.request.get_json())  # noqa: E501
+
     return 'do some magic!'
 
 
@@ -45,4 +47,4 @@ def get_student_by_id(student_id):  # noqa: E501
 
     :rtype: Student
     """
-    return 'do some magic!'
+    return swagger_server.service.student_service.get_student_by_id(student_id, '')

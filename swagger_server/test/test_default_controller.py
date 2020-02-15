@@ -1,6 +1,8 @@
 # coding: utf-8
-
 from __future__ import absolute_import
+
+import unittest
+import unittest.mock
 
 from flask import json
 from six import BytesIO
@@ -39,17 +41,29 @@ class TestDefaultController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
-    def test_get_student_by_id(self):
+    @unittest.mock.patch('swagger_server.service.student_service.get_student_by_id')
+    def test_get_student_by_id(self, mock_get_student_by_id):
         """Test case for get_student_by_id
 
         Find student by ID
         """
+
+        mock_get_student_by_id.return_value = Student(1, "first1", "last1")
+
         response = self.client.open(
-            '/service-api/student/{student_id}'.format(student_id=789),
+            '/service-api/student/{student_id}'.format(student_id=1),
             method='GET')
+
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+        json_data = json.loads(response.data)
+        print(json_data)
+
+        self.assertEqual(json_data['student_id'], 1)
+        self.assertEqual(json_data['first_name'], "first1")
+        self.assertEqual(json_data['last_name'], "last1")
+        
 
 if __name__ == '__main__':
     import unittest
