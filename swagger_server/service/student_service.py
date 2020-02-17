@@ -48,7 +48,8 @@ def get_student_by_id(student_id, subject):
 
 def get_student_by_last_name(last_name):
     
-    student = student_db.get(last_name=last_name)
+    S = Query()
+    student = student_db.get(S.last_name == last_name)
     
     if not student:
         raise ValueError
